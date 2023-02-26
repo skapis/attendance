@@ -1,0 +1,119 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+<div>
+    <div>
+        <h1 class="mb-3 font-weight-bold">Projekty</h1>
+        {% include 'partials/messages.html' %}
+    </div>
+    <div class="row p-3 overflow-auto">
+        <div class="form-row mr-2">
+            <div class="col">
+                <select name="month" class="form-control rounded-lg">
+                </select>
+            </div>
+            <div class="col">
+                <select name="year" class="form-control rounded-lg">
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-primary rounded-lg" id="showBtn">Zobrazit</button>
+    </div>
+    {% if projectHours|length != 0 %}
+        <div>
+            <div>
+                <h4 class="font-weight-bolder">Souhrn</h4>
+                <div class="row px-3 overflow-auto mb-3">
+                    <div class="col bg-white overflow-auto border rounded-lg">
+                        <table class="table table-borderless mb-0">
+                            <thead class="border-bottom">
+                                <th scope="col">Projekt</th>
+                                <th scope="col">Počet hodin</th>
+                            </thead>
+                            <tbody>
+                                {% for project in projectHours %}
+                                    <tr id="{{project.name}}">
+                                        <td>{{project.name}}</td>
+                                        <td>{{project.sum}}</td>
+                                    </tr>
+                                {% endfor %}
+                                <tr class="border-top font-weight-bold">
+                                    <td>Celkem</td>
+                                    <td>{{total}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-weight-bolder">Detail</h4>
+                <div class="row px-3">
+                    {% if not confirmed %}
+                        <button data-toggle="modal" data-target="#newProject" class="btn btn-primary rounded-lg">Nový záznam</button>
+                        {% include 'modals/newProject.html' %}
+                    {% endif %}
+                </div>
+                <div class="row p-3">
+                    <div class="col bg-white overflow-auto border rounded-lg">
+                        <table class="table table-borderless mb-0">
+                            <thead class="border-bottom">
+                                <th scope="col">Projekt</th>
+                                <th scope="col">Datum</th>
+                                <th scope="col">Začátek</th>
+                                <th scope="col">Konec</th>
+                                <th scope="col">Počet hodin</th>
+                                {% if not confirmed %}
+                                    <th scope="col"></th>
+                                {% endif %}
+                            </thead>
+                            <tbody>
+                                {% for project in projects %}
+                                <tr id="{{project.projectId}}">
+                                    <td>{{project.name}}</td>
+                                    <td>{{project.date|date:'d.m.Y'}}</td>
+                                    <td>{{project.start|date:'H:i'}}</td>
+                                    <td>{{project.end|date:'H:i'}}</td>
+                                    <td>{{project.work_hours}}</td>
+                                    {% if not project.confirmed %}
+                                        <td>
+                                            <button data-toggle="modal" data-target="#edit_{{project.projectId}}" class="btn btn-outline-primary border-0 rounded-lg">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                        </td>
+                                        {% include 'modals/editProject.html' with project=project %}
+                                    {% endif %}
+                                </tr>
+                                {% endfor %}
+                                <tr class="border-top font-weight-bold">
+                                    <td>Celkem</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{total}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row p-3">
+                <a href="{% url 'excel_export' %}?{{ request.GET.urlencode }}" class="btn btn-primary rounded-lg mr-2"><i class="fa fa-file-excel"></i> Exportovat</a>
+                {% if not confirmed %}
+                    <a href="{% url 'confirm' %}?{{ request.GET.urlencode }}" class="btn btn-primary rounded-lg"><i class="fa fa-check-square"></i> Odeslat</a>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="row px-3">
+            <button data-toggle="modal" data-target="#newProject" class="btn btn-primary rounded-lg">Nový záznam</button>
+            {% include 'modals/newProject.html' %}
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                Žádná data
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

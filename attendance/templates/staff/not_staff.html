@@ -1,0 +1,8 @@
+{% extends 'base_auth.html' %}
+{% load static %}
+{% block content %}
+    <div class="text-center">
+        <h1 class="font-weight-bold">Do této sekce nemáte dostatečná oprávnění.</h1>
+        <a href="{% url 'login' %}" class="btn btn-primary rounded-lg">Zpět na přihlášení</a>
+    </div>
+{% endblock %}

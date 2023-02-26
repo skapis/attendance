@@ -1,0 +1,35 @@
+<div class="col bg-white overflow-auto border rounded-lg">
+    <table class="table table-borderless mb-0">
+        <thead class="border-bottom">
+            <th scope="col">Projekt</th>
+            <th scope="col">Datum</th>
+            <th scope="col">Začátek</th>
+            <th scope="col">Konec</th>
+            <th scope="col">Počet hodin</th>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr id="{{project.projectId}}">
+                <td>{{project.name}}</td>
+                <td>{{project.date|date:'d.m.Y'}}</td>
+                <td>{{project.start|date:'H:i'}}</td>
+                <td>{{project.end|date:'H:i'}}</td>
+                <td>{{project.work_hours}}</td>
+                <td>
+                    <button data-toggle="modal" data-target="#edit_{{project.projectId}}" class="btn btn-outline-primary border-0 rounded-lg">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                </td>
+                {% include 'modals/editEmpProject.html' with project=project %}
+            </tr>
+            {% endfor %}
+            <tr class="border-top font-weight-bold">
+                <td>Celkem</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{prTotal}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

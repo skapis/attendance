@@ -1,0 +1,53 @@
+{% load static %}
+{% block content %}
+<div class="modal fade" id="edit_{{att.attendanceId}}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content rounded-lg">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold">Editace záznamu</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{% url 'edit_attendance' att.attendanceId %}" class="mb-0" method="post">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="date" class="font-weight-bolder">Datum</label>
+                    <input type="date" name="date" readonly value="{{att.date|date:'Y-m-d'}}" class="form-control rounded-sm" required>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="start" class="font-weight-bolder">Začátek</label>
+                            <input type="time" name="start" value="{{att.start|time:'h:i:s'}}" class="form-control rounded-sm" required>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="end" class="font-weight-bolder">Konec</label>
+                            <input type="time" name="end" value="{{att.end|time:'h:i:s'}}" class="form-control rounded-sm" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="category" class="font-weight-bolder">Kategorie</label>
+                    <select name="category" class="form-control rounded-sm mr-2">
+                        {% for category in categories %}
+                            {% if category.name == att.category.name %}
+                                <option value="{{category.id}}" selected>{{category.name}}</option>
+                            {% else %}
+                                <option value="{{category.id}}">{{category.name}}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" id="submitBtn" class="btn btn-primary btn-block rounded-sm" value="Uložit">
+            </div>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}

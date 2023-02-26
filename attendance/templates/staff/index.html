@@ -1,0 +1,24 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+<div>
+    <h1 class="mb-3 font-weight-bold">Přehled zaměstnanců</h1>
+    {% include 'partials/messages.html' %}
+</div>
+<div class="row px-3 mb-3">
+    <button data-toggle="modal" data-target="#newUser" class="btn btn-primary rounded-lg">Vytvořit nového zaměstnance</button>
+    {% include 'modals/newUser.html' %}
+</div>
+<div class="row">
+    <div class="col">
+        <ul class="list-group">
+            {% for emp in employees %}
+                <li class="list-group-item border rounded-lg mb-2">
+                    <a href="{% url 'employee' emp.profileId %}">{{emp.owner.first_name}} {{emp.owner.last_name}}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<script src="{% static 'js/newUser.js' %}"></script>
+{% endblock %}

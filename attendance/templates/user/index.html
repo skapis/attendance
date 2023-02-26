@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1 class="mb-3 font-weight-bold">Uživatelský účet</h1>
+{% include 'partials/messages.html' %}
+<div class="row">
+    <div class="col">
+        <div class="card rounded-lg mb-3 shadow-sm">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">Uživatelské jméno</p>
+                    </div>
+                    <div class="col-sm-9">
+                    <p class="text-muted mb-0">{{request.user.username}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">Jméno a Příjmení</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{request.user.first_name}} {{request.user.last_name}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">E-mail</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{request.user.email}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">Číslo zaměstnance</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{profile.workerId}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">Výše úvazku</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{profile.fteValue}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">Pozice</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{profile.position}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

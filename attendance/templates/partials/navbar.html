@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-white shadow-sm">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto text-center text-md-left text-lg-left">
+            {% if request.user.is_staff %}
+            <li class="nav-item">
+                <a class="nav-link text-dark h6 mb-0 font-weight-bolder" href="{% url 'staff' %}">Zaměstnanci</a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link text-dark h6 mb-0 font-weight-bolder" href="{% url 'attendance' %}">Docházka</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark h6 mb-0 font-weight-bolder" href="{% url 'projects' %}">Projekty</a>
+            </li>
+        </ul>
+        <span class="nav-link pl-0 pb-0 position-relative text-center text-md-left text-lg-left">
+            <h5 class="bi bi-person-circle">
+                <a class="stretched-link text-decoration-none text-dark" id="user_profile_link" href="{% url 'account' %}"> {{request.user.first_name}} {{request.user.last_name}}</a>
+            </h5>
+        </span>
+        <form  class="form mt-2 mb-1 text-center text-md-left text-lg-left" action="{% url 'logout' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-outline-primary rounded-lg" value="Odhlásit se">
+        </form>
+    </div>
+</nav>

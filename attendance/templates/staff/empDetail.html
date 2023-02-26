@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1 class="mb-3 font-weight-bold">{{profile.owner.first_name}} {{profile.owner.last_name}}</h1>
+{% include 'partials/messages.html' %}
+<div class="row px-3">
+    <form action="{% url 'user_active' profile.profileId %}" method="post">
+        {% csrf_token %}
+        {% if profile.owner.is_active %}
+            <button class="btn btn-danger rounded-lg">Deaktivovat uživatele</button>
+        {% else %}
+            <button class="btn btn-success rounded-lg">Aktivovat uživatele</button>
+        {% endif %}
+    </form>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card rounded-lg mb-3 shadow-sm">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">Uživatelské jméno</p>
+                    </div>
+                    <div class="col-sm-9">
+                    <p class="text-muted mb-0">{{profile.owner.username}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">Jméno a Příjmení</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{profile.owner.first_name}} {{profile.owner.last_name}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">E-mail</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{profile.owner.email}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">Číslo zaměstnance</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{profile.workerId}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">Výše úvazku</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{profile.fteValue}}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                    <p class="mb-0">Pozice</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">{{profile.position}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row p-3 overflow-auto">
+    <div class="form-row mr-2">
+        <div class="col">
+            <select name="month" class="form-control rounded-lg">
+            </select>
+        </div>
+        <div class="col">
+            <select name="year" class="form-control rounded-lg">
+            </select>
+        </div>
+    </div>
+    <button class="btn btn-primary rounded-lg" id="showBtn">Zobrazit</button>
+</div>
+<h4 class="font-weight-bolder">Docházka</h4>
+{% if attendanceMonth|length != 0%}
+<div>
+    <div class="row px-3 overflow-auto mb-3">
+        <div class="col bg-white overflow-auto border rounded-lg">
+            <table class="table table-borderless mb-0">
+                <thead class="border-bottom">
+                    <th scope="col">Kategorie</th>
+                    <th scope="col">Počet hodin</th>
+                    <th scope="col">Povrzeno</th>
+                </thead>
+                <tbody>
+                    {% for att in attendanceMonth %}
+                        <tr id="{{.name}}">
+                            <td>{{att.category}}</td>
+                            <td>{{att.hours}}</td>
+                            <td>{{att.created_at|date:'d.m.Y'}}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="border-top font-weight-bold">
+                        <td>Hodiny navíc</td>
+                        <td>{{extraHours}}</td>
+                    </tr>
+                    <tr class="font-weight-bold">
+                        <td>Celkem</td>
+                        <td>{{attTotal}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="mb-3">
+        <button class="btn btn-primary rounded-lg" data-toggle="collapse" aria-expanded="false" data-target="#attendanceTable">Detail docházky</button>
+        <a href="{% url 'export_emp_attendance' profile.profileId %}?{{ request.GET.urlencode }}" class="btn btn-primary rounded-lg mr-2"><i class="fa fa-file-excel"></i> Exportovat</a>
+        <div class="collapse row p-3" id="attendanceTable">
+            {% include 'partials/attendanceTable.html' %}
+        </div>
+    </div>
+</div>
+{% elif attendance|length != 0%}
+<div class="row p-3">
+    {% include 'partials/attendanceTable.html' %}
+</div>
+{% else %}
+    <div class="row p-3">
+        <div class="col text-center">
+            Žádná data
+        </div>
+    </div>
+{% endif %}
+<h4 class="font-weight-bolder">Projekty</h4>
+{% if projectMonth|length != 0 %} 
+<div>
+    <div class="row px-3 overflow-auto mb-3">
+        <div class="col bg-white overflow-auto border rounded-lg">
+            <table class="table table-borderless mb-0">
+                <thead class="border-bottom">
+                    <th scope="col">Projekt</th>
+                    <th scope="col">Počet hodin</th>
+                    <th scope="col">Povrzeno</th>
+                </thead>
+                <tbody>
+                    {% for project in projectMonth %}
+                        <tr id="{{project.name}}">
+                            <td>{{project.name}}</td>
+                            <td>{{project.hours}}</td>
+                            <td>{{project.created_at|date:'d.m.Y'}}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="border-top font-weight-bold">
+                        <td>Celkem</td>
+                        <td>{{monthTotal}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="mb-3">
+        <button class="btn btn-primary rounded-lg" data-toggle="collapse" aria-expanded="false" data-target="#projectTable">Detail projektů</button>
+        <a href="{% url 'export_emp_projects' profile.profileId %}?{{ request.GET.urlencode }}" class="btn btn-primary rounded-lg mr-2"><i class="fa fa-file-excel"></i> Exportovat</a>
+        <div class="collapse row p-3" id="projectTable">
+            {% include 'partials/projectTable.html' %}
+        </div>
+    </div>
+</div>
+{% elif projects|length != 0 %}
+    <div class="row p-3">
+        {% include 'partials/projectTable.html' %}
+    </div>
+{% else %}
+    <div class="row p-3">
+        <div class="col text-center">
+            Žádná data
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+<div>
+    <div>
+        <h1 class="mb-3 font-weight-bold">Docházka</h1>
+        {% include 'partials/messages.html' %}
+    </div>
+    <div class="row p-3 overflow-auto">
+        <div class="form-row mr-2">
+            <div class="col">
+                <select name="month" class="form-control rounded-lg">
+                </select>
+            </div>
+            <div class="col">
+                <select name="year" class="form-control rounded-lg">
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-primary rounded-lg" id="showBtn">Zobrazit</button>
+    </div>
+    {% if attendance|length != 0%}
+        <div>
+            <div class="row p-3">
+                <div class="col bg-white overflow-auto border rounded-lg">
+                    <table class="table table-borderless mb-0">
+                        <thead class="border-bottom">
+                            <th scope="col">Datum</th>
+                            <th scope="col">Kategorie</th>
+                            <th scope="col">Začátek</th>
+                            <th scope="col">Konec</th>
+                            <th scope="col">Počet hodin</th>
+                            <th scope="col">Saldo</th>
+                            {% if not confirmed %}
+                                <th scope="col"></th>
+                            {% endif %}
+                        </thead>
+                        <tbody>
+                            {% for att in attendance %}
+                            <tr id="{{att.attendanceId}}">
+                                <td>{{att.date|date:'d.m.Y'}}</td>
+                                <td>{{att.category.name}}</td>
+                                <td>{{att.start|date:'H:i'}}</td>
+                                <td>{{att.end|date:'H:i'}}</td>
+                                <td>{{att.work_hours}}</td>
+                                <td>{{att.saldo}}</td>
+                                {% if not confirmed %}
+                                    <td>
+                                        
+                                        {% if att.category.name != 'Státní svátek' %}
+                                        <button data-toggle="modal" data-target="#edit_{{att.attendanceId}}" class="btn btn-outline-primary border-0 rounded-lg">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        {% endif %}
+                                    </td>
+                                    {% include 'modals/editAttendance.html' with att=att %}
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                            <tr class="border-top font-weight-bold">
+                                <td>Celkem</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{{total}}</td>
+                                <td>{{required}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row px-3 mb-3">
+                {% if not confirmed %}
+                    {% if required >= 0 %}
+                        <a href="{% url 'confirm_attendance' %}?{{ request.GET.urlencode }}" class="btn btn-primary rounded-lg"><i class="fa fa-check-square"></i> Odeslat</a>
+                    {% else %}
+                    <a href="{% url 'confirm_attendance' %}?{{ request.GET.urlencode }}" class="btn btn-primary rounded-lg disabled"><i class="fa fa-check-square"></i> Odeslat</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col text-center">
+                Žádná data
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
