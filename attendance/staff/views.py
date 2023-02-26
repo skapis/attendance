@@ -107,7 +107,7 @@ def create_new_user(request):
 
         user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name,
                                         password=password)
-        UserProfile.objects.create(owner=user, workerId=emp_num, active=True, fteValue=fte, position=position)
+        UserProfile.objects.create(owner=user, workerId=emp_num, fteValue=fte, position=position)
 
         messages.success(request, 'Uživatel byl vytvořen')
         return redirect('staff')
