@@ -100,7 +100,10 @@
             <div class="row p-3">
                 <a href="{% url 'excel_export' %}?{{ request.GET.urlencode }}" class="btn btn-primary rounded-lg mr-2"><i class="fa fa-file-excel"></i> Exportovat</a>
                 {% if not confirmed %}
-                    <a href="{% url 'confirm' %}?{{ request.GET.urlencode }}" class="btn btn-primary rounded-lg"><i class="fa fa-check-square"></i> Odeslat</a>
+                    <button data-toggle="modal" data-target="#confirmPr" class="btn btn-primary rounded-lg">
+                        <i class="fa fa-check-square"></i> Odeslat
+                    </button>
+                    {% include 'modals/confirmProjects.html'%}
                 {% endif %}
             </div>
         </div>
