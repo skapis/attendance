@@ -254,7 +254,7 @@ def export_emp_projects(request, id):
     font_style = xlwt.XFStyle()
 
     ws_sum = wb.add_sheet('Souhrn')
-    header = ['Projekt', 'Měsíc']
+    header = ['Projekt', 'Počet hodin']
     font_style.font.bold = True
     for col in range(len(header)):
         ws_sum.write(0, col, header[col], font_style)
