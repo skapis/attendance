@@ -72,9 +72,14 @@
             <div class="row px-3 mb-3">
                 {% if not confirmed %}
                     {% if required >= 0 %}
-                        <a href="{% url 'confirm_attendance' %}?{{ request.GET.urlencode }}" class="btn btn-primary rounded-lg"><i class="fa fa-check-square"></i> Odeslat</a>
+                        <button data-toggle="modal" data-target="#confirmAtt" class="btn btn-primary rounded-lg">
+                            <i class="fa fa-check-square"></i> Odeslat
+                        </button>
+                        {% include 'modals/confirmAtt.html'%}
                     {% else %}
-                    <a href="{% url 'confirm_attendance' %}?{{ request.GET.urlencode }}" class="btn btn-primary rounded-lg disabled"><i class="fa fa-check-square"></i> Odeslat</a>
+                        <button data-toggle="modal" data-target="#confirmAtt" class="btn btn-primary rounded-lg">
+                            <i class="fa fa-check-square"></i> Odeslat
+                        </button>
                     {% endif %}
                 {% endif %}
             </div>
