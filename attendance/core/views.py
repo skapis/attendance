@@ -151,7 +151,7 @@ def export_attendance(request):
     year = request.GET.get('year', None)
     month = request.GET.get('month', None)
     if year and month:
-        att = Attendance.objects.filter(owner=request.owner, month=int(month), year=int(year))
+        att = Attendance.objects.filter(owner=request.user, month=int(month), year=int(year))
     else:
         att = Attendance.objects.filter(owner=request.user, month=dt.today().month, year=dt.today().year)
     wb = xlwt.Workbook(encoding='utf-8')
