@@ -70,6 +70,7 @@
                 </div>
             </div>
             <div class="row px-3 mb-3">
+                <a href="{% url 'export_att' %}?{{ request.GET.urlencode }}" class="btn btn-primary rounded-lg mr-2"><i class="fa fa-file-excel"></i> Exportovat</a>
                 {% if not confirmed %}
                     {% if required >= 0 %}
                         <button data-toggle="modal" data-target="#confirmAtt" class="btn btn-primary rounded-lg">
