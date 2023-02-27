@@ -62,7 +62,21 @@ def emp_detail(request, id):
         project_hours = pr.aggregate(sum=Sum('duration'))
         project_hours_month = pr_m.aggregate(sum=Sum('duration'))
         att_hours = att.aggregate(sum=Sum('duration'))
-        att_total = decimal.Decimal(round(att_hours['sum'] / 3600, 2))
+        
+        if att_hours['sum']:
+            att_total = decimal.Decimal(round(att_hours['sum'] / 3600, 2))
+        else:
+            att_total = 0
+
+        if project_hours['sum']:
+            pr_total = round(project_hours['sum'] / 3600, 2)
+        else:
+            pr_total = 0
+
+        if project_hours_month['sum']:
+            m_total = round(project_hours_month['sum'] / 3600, 2)
+        else:
+            m_total = 0
 
         cal = Calendar.objects.filter(month=month, year=year, weekend=False).count()
         extra_hours = att_total - (cal * decimal.Decimal(8.5) * profile.fteValue)
@@ -71,10 +85,10 @@ def emp_detail(request, id):
             'profile': profile,
             'attendance': att,
             'projects': pr,
-            'prTotal': round(project_hours['sum'] / 3600, 2),
+            'prTotal': pr_total,
             'projectMonth': pr_m,
             'attendanceMonth': att_m,
-            'monthTotal': round(project_hours_month['sum'] / 3600, 2),
+            'monthTotal': m_total,
             'attTotal': att_total,
             'extraHours': extra_hours,
             'categories': categories
