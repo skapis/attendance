@@ -6,6 +6,8 @@ from .models import Attendance, AttendanceCategory, Calendar, AttendanceAggMonth
 from django.contrib.auth.decorators import login_required
 from userprofile.models import UserProfile
 from django.db.models import Sum
+from django.http import HttpResponse
+import xlwt
 
 
 @login_required(login_url='/auth/login')
@@ -140,3 +142,59 @@ def confirm_attendance(request):
 
         messages.success(request, 'Docházka byla potvrzena')
         return redirect(reverse('attendance') + f'?year={year}&month={month}')
+
+    
+@login_required(login_url='/auth/login')
+def export_attendance(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename=Docházka_' + str(dt.now().date()) + '.xls'
+    year = request.GET.get('year', None)
+    month = request.GET.get('month', None)
+    if year and month:
+        att = Attendance.objects.filter(owner=request.owner, month=int(month), year=int(year))
+    else:
+        att = Attendance.objects.filter(owner=request.user, month=dt.today().month, year=dt.today().year)
+    wb = xlwt.Workbook(encoding='utf-8')
+    font_style = xlwt.XFStyle()
+
+    ws_sum = wb.add_sheet('Souhrn')
+    header = ['Měsíc', 'Kategorie', 'Počet hodin']
+    font_style.font.bold = True
+    for col in range(len(header)):
+        ws_sum.write(0, col, header[col], font_style)
+
+    font_style = xlwt.XFStyle()
+    row_n = 0
+
+    att_m = att.values('category').annotate(sum=Sum('duration'))
+
+    for a in att_m:
+        row_n += 1
+        cat = AttendanceCategory.objects.get(pk=a['category'])
+        data = [cat.name, round(a['sum'] / 3600, 2)]
+        for col_num, col in enumerate(data):
+            ws_sum.write(row_n, col_num, col)
+
+    ws = wb.add_sheet('Detail')
+    row_num = 0
+    columns = ['Datum', 'Kategorie', 'Začátek', 'Konec', 'Počet hodin', 'Saldo']
+    font_style.font.bold = True
+    for col in range(len(columns)):
+        ws.write(row_num, col, columns[col], font_style)
+    font_style = xlwt.XFStyle()
+
+    for at in att:
+        row_num += 1
+        category = at.category.name
+        d = str(at.date)
+        start = str(at.start)
+        end = str(at.end)
+        duration = round(at.duration / 3600, 2)
+        saldo = at.saldo()
+
+        data = [d, category, start, end, duration, saldo]
+        for col_num, col in enumerate(data):
+            ws.write(row_num, col_num, col, font_style)
+
+    wb.save(response)
+    return response
