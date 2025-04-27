@@ -1,34 +1,35 @@
-# Docházkový systém
-V této složce se nachází docházkový systém, který může sloužit pro malé firmy pro evidenci docházky jejich zaměstnanců. 
-Aplikace je vytvořena v frameworku Django a pro frontendovou část je použit Bootstrap 4. Pro používání aplikace je nutné, aby každý zaměstnance i manažer měl vytvořený účet. Z důvodu omezení uživatelů může vytvářet účty pouze uživatel s admin rolí a manažer.
+# Attendance System
+This folder contains an attendance system that can be used by small companies to track employee attendance. 
+The application is built using the Django framework with Bootstrap 4 for the frontend. To use the application, each employee and manager must have a created account. Due to user restrictions, only users with admin roles and managers can create accounts.
 
-## Docházka
-Po přihlášení do účtu je uživatel s rolí zaměstnance přesměrován na přehled docházky pro aktuální měsíc. Pokud se uživatel přihlásil poprvé do aplikace, tak je mu automaticky vygenerována docházka na celý měsíc. Uživatel může poté záznamy editovat podle odpracovaných hodin. Uživatel také může exportovat všechny záznamy do excelového souboru.
-Vyexportovaný soubor bude obsahovat 2 listy, první list obsahuje souhrn, kde je docházka sečtena podle kategorií a druhý list obsahuje detail docházky.
-![Přehled docházky](https://github.com/skapis/appscreenshots/blob/main/Attendance/Doch%C3%A1zka.png)
-### Odeslání/Potvrzení docházky
-Pokud má uživatel vyplněnou docházku za celý měsíc a splněné požadované hodiny, tak se zpřístupní možnost "Odeslat". Po odeslání docházky se vypočítá celková měsíční docházka a uživatel již nemůže záznamy editovat. V případě, že docházka obsahuje chyby je možné ji upravit, ale po odeslání může editovat docházku pouze uživatel, který má roli manažera.
+## Attendance
+After logging in, users with employee roles are redirected to the attendance overview for the current month. If a user logs in for the first time, their attendance records are automatically generated for the entire month. Users can then edit records according to their worked hours. Users can also export all records to an Excel file.
+The exported file will contain 2 sheets - the first sheet contains a summary where attendance is totaled by categories, and the second sheet contains detailed attendance records.
+![Attendance Overview](https://github.com/skapis/appscreenshots/blob/main/Attendance/Doch%C3%A1zka.png)
 
-## Projekty
-Sekce projekty slouží pro zápis odpracovaných hodin na jednotlivých projektech, na kterých uživatel pracoval. Na přehledu projektů může uživatel vytvořit nový záznam, kde vyplní název projektu, datum a čas od kdy do kdy na projektu pracoval. Na základě těchto záznamů se plní tabulka souhrnu, kde jsou sečteny všechny hodiny podle jednotlivých projektů. Stejně jako u docházky může uživatel exportovat souhrn a detailní přehled do excelového souboru.
-V případě, že má uživatel zaznamenané všechny odpracované hodiny na projektech za daný měsíc, tak může odeslat projekty, čímž se stejně jako u docházky znemožní následná editace záznamů.
-![Přehled projektů](https://github.com/skapis/appscreenshots/blob/main/Attendance/Projekty.png)
+### Submitting/Confirming Attendance
+If a user has completed attendance for the entire month and met the required hours, the "Submit" option becomes available. After submitting attendance, the total monthly attendance is calculated and the user can no longer edit the records. If the attendance contains errors, it can be modified, but after submission, only users with manager roles can edit the attendance.
 
-## Přehled zaměstnanců
-Přehled všech zaměstnanců slouží uživateli s rolí manažera ke kontrole docházky a projektů zaměstnanců. Na přehledu manažer vidí všechny zaměstnance, které jsou v systému registrováni. Dále také může vytvořit účet novému uživateli/zaměstnanci. Uživateli s rolí manažera se zobrazí položka "Zaměstnanci" v horním menu, zaměstnanci (běžní uživatelé) tuto možnost nemají.
-![Přehled zaměstnanců](https://github.com/skapis/appscreenshots/blob/main/Attendance/P%C5%99ehled%20zam%C4%9Bstnanc%C5%AF.png)
+## Projects
+The Projects section is used to record hours worked on individual projects. In the projects overview, users can create new entries by filling in the project name, date, and time period worked. Based on these records, the summary table is populated with total hours by project. Like attendance, users can export both summary and detailed overview to an Excel file.
+If a user has recorded all worked hours on projects for the given month, they can submit the projects, which, similar to attendance, prevents further editing of records.
+![Projects Overview](https://github.com/skapis/appscreenshots/blob/main/Attendance/Projekty.png)
 
-### Vytvoření nového uživatele
-Pro vytvoření nového uživatele je potřeba vyplnit všechny pole obsažená ve formuláři. Formulář kontroluje duplicitní uživatelské jméno, dále jsou nastaveny požadavky na heslo. Manažer také vyplní výši úvazku a další informace. Výše úvazku se vyplní jako číslo, přičemž 1 = plný úvazek, 0,5 = poloviční úvazek. Podle tohoto koeficientu se pak řídí počet hodin, které zaměstnanec musí odpracovat/vyplnit do docházky.
-![Nový uživatel](https://github.com/skapis/appscreenshots/blob/main/Attendance/Nov%C3%BD%20u%C5%BEivatel.png)
+## Employee Overview
+The employee overview allows users with manager roles to check attendance and projects of employees. In the overview, managers can see all employees registered in the system. They can also create accounts for new users/employees. Users with manager roles will see the "Employees" item in the top menu, while employees (regular users) don't have this option.
+![Employee Overview](https://github.com/skapis/appscreenshots/blob/main/Attendance/P%C5%99ehled%20zam%C4%9Bstnanc%C5%AF.png)
 
-### Detail zaměstnance
-V detailu zaměstnance může manažer deaktivovat přístup zaměstnance do systému kliknutím na tlačítko "Deaktivovat uživatele". Tato možnost je v systému pro případ, že by zaměstnanec ve firmě ukončil pracovní poměr a bylo zapotřebí zamezit mu přístup do systému. Dále si manažer může procházet docházku a projekty zaměstnance a editovat jeho docházku/projekty. V případě, že docházka/projekty nejsou ještě odeslané, tak se zobrazí pouze detailní záznamy. Po potvrzení se zobrazí souhrny a možnost zobrazit detail.
-Manažer má také možnost exportovat docházku/projekty do excelového souboru. Soubor má stejný formát jako u bežných uživatelů.
-![Detail zaměstnance](https://github.com/skapis/appscreenshots/blob/main/Attendance/Zam%C4%9Bstanec.png)
+### Creating a New User
+To create a new user, all fields in the form must be completed. The form checks for duplicate usernames and has password requirements. Managers also fill in the employment ratio and other information. The employment ratio is entered as a number, where 1 = full-time, 0.5 = part-time. This coefficient determines the number of hours an employee must work/fill in their attendance.
+![New User](https://github.com/skapis/appscreenshots/blob/main/Attendance/Nov%C3%BD%20u%C5%BEivatel.png)
 
-## Vytvoření kalendáře
-Pro správné fungování aplikace je nutné, aby admin systému vytvořil v databázi kalendář, který bude obsahovat jednotlivé dny a budou označeny víkendové dny a svátky. Níže je skript, který vytvoří záznamy pro všechny dny v roce a označí víkendy. Svátky se musí označit ručně v administraci, kam má admin přístup.
+### Employee Detail
+In the employee detail, managers can deactivate an employee's system access by clicking the "Deactivate User" button. This option exists for cases when an employee leaves the company and needs to have their system access revoked. Managers can also browse through employee attendance and projects, and edit their attendance/projects. If attendance/projects haven't been submitted yet, only detailed records are shown. After confirmation, summaries and the option to view details are displayed.
+Managers can also export attendance/projects to an Excel file. The file has the same format as for regular users.
+![Employee Detail](https://github.com/skapis/appscreenshots/blob/main/Attendance/Zam%C4%9Bstanec.png)
+
+## Calendar Creation
+For proper application functionality, the system admin must create a calendar in the database that contains individual days with marked weekends and holidays. Below is a script that creates records for all days in the year and marks weekends. Holidays must be marked manually in the admin interface, which the admin has access to.
 ```
 from core.models import Calendar
 from datetime import datetime as dt
